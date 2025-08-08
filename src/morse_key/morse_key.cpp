@@ -1,7 +1,7 @@
 #include "morse_key.h"
 #include "Arduino.h"
 
-MorseKey::MorseKey(int button, int chmode, int lang, int caps, int buzz, unsigned long dot, int tone):
+MorseKey::MorseKey(int button, int chmode, int lang, int caps, int buzz, unsigned long dot, int tone, int line, int space, int word_space):
 key(button),
 button_select_mode_pin(chmode),
 button_language_mode_pin(lang),
@@ -12,8 +12,12 @@ last_millis(millis()),
 buzzer_tone(tone),
 rus(false),
 mode(1),
+line(line),
+space(space),
+word_space(word_space),
 last_space_millis(0),
-lastPressed(false) {
+lastPressed(false)
+{
     pinMode(key, INPUT_PULLUP);
     pinMode(buzzer_pin, OUTPUT);
 }
@@ -23,13 +27,13 @@ void MorseKey::morse(const bool pressed, USBMouseKeyboard &keyboard) {
 
     if (!pressed) {
         if (lastPressed) {
-            if (millis() - last_space_millis >= dot * 24) {
+            if (millis() - last_space_millis >= dot * word_space) {
                 keyboard.printf(" / ");
             }
-            else if (millis() - last_space_millis >= dot * 8) {
+            else if (millis() - last_space_millis >= dot * space) {
                 keyboard.printf(" ");
             }
-            if (current - last_millis >= dot * 3) {
+            if (current - last_millis >= dot * line) {
                 keyboard.printf("-");
             }
             else if (current - last_millis >= dot) {

@@ -5,6 +5,9 @@ class MorseKey {
     unsigned long last_millis;
     unsigned long last_space_millis;
     unsigned long dot;
+    int space;
+    int word_space;
+    int line;
     int buzzer_tone;
     int key;
     int button_select_mode_pin;
@@ -20,6 +23,6 @@ class MorseKey {
     void changeMode(int);
 
     public:
-        MorseKey(int, int, int, int, int, unsigned long, int);
+        MorseKey(int, int, int, int, int, unsigned long, int, int, int, int);
         void operate(USBMouseKeyboard&);
 };
