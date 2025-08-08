@@ -13,11 +13,11 @@ I've built mine using all these parts below, but you can actually run this proje
 You can remap basically everything in ```defines.h``` file.
 ## Usage
 This projects has 3 modes:
-- Mouse clicks
+### Mouse clicks
 Key press = mouse click.
-- Dots and lines
+### Dots and lines
 Types out the morse code itself. Auto detects spaces between characters and words.
-- Decoder
+### Decoder
 Decode morse and type out actual letters on your PC. Useful when combined with a keyboard typing test. 
 Use the ```BUTTON_CAPS_PIN``` to switch between upper/lower case letters, and the ```BUTTON_LANGUAGE_PIN``` to switch between languages.       
 Use the ```BUTTON_MODE_PIN``` button to switch between modes.
