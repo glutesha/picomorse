@@ -21,4 +21,4 @@ Type out the Morse code itself. Auto detects spaces between characters and words
 Decode Morse and type out actual letters on your PC. Useful when combined with a keyboard typing test. 
 Use the ```BUTTON_CAPS_PIN``` to switch between upper/lower case letters, and the ```BUTTON_LANGUAGE_PIN``` to switch between languages.       
 ## Technologies
-The whole project is written entirely in C++ and the Arduino framework with no additional libraries. As simple as that.
+The whole project is written entirely in C++ and the Arduino framework.
