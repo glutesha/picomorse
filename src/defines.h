@@ -2,4 +2,9 @@
 
 #define SERIAL_MONITOR_BAUDRATE 9600
 #define BUTTON_PIN 2
+#define BUTTON_MODE_PIN 3
+#define BUTTON_LANGUAGE_PIN 4
+#define BUTTON_CAPS_PIN 5
+#define DOT 50
 #define BUZZER 28
+#define BUZZER_TONE 200

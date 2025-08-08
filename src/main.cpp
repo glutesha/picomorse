@@ -1,32 +1,19 @@
 #include <Arduino.h>
-#include <PluggableUSBHID.h>
-#include <USBMouse.h>
-#include <USBKeyboard.h>
+#include <USBMouseKeyboard.h>
 
 #include "defines.h"
+#include "morse_key/morse_key.h"
 
-USBMouse Mouse;
-USBKeyboard Keyboard;
+MorseKey *morse = nullptr;
+USBMouseKeyboard device;
 
 bool prevPressed = false;
 
 void setup() {
   Serial.begin(SERIAL_MONITOR_BAUDRATE);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  pinMode(BUZZER, OUTPUT);
+  morse = new MorseKey(BUTTON_PIN, BUTTON_MODE_PIN, BUTTON_LANGUAGE_PIN, BUTTON_CAPS_PIN, BUZZER, DOT, BUZZER_TONE);
 }
 
 void loop() {
-  bool pressed = !digitalRead(BUTTON_PIN);
-  if (pressed && !prevPressed) {
-    Mouse.press(MOUSE_LEFT);
-    Serial.println("PRESS");
-    analogWrite(BUZZER, 200);
-  }
-  else if (!pressed && prevPressed) {
-    Mouse.release(MOUSE_LEFT);
-    analogWrite(BUZZER, 0);
-  }
-  prevPressed = pressed;
-  delay(50);
+  morse->operate(device);
 }
