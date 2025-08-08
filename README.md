@@ -1,6 +1,6 @@
 # Picomorse
 Picomorse is an RP2040-based Morse code keyboard. You can make it out of any existing Morse key or a simple tactile button.
-Supports English and russian morse.
+Supports English and Russian morse.
 ## Build
 To build this project in its full configuration, you need:
 - Raspberry Pi Pico
