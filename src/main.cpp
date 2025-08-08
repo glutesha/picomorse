@@ -1,36 +1,30 @@
 #include <Arduino.h>
 #include <PluggableUSBHID.h>
 #include <USBMouse.h>
-#include "FastLED.h"
+
+#include "defines.h"
 
 USBMouse Mouse;
-CRGB leds[1];
 
 bool prevPressed = false;
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(2, INPUT_PULLUP);
-  pinMode(26, OUTPUT);
-  pinMode(28, OUTPUT);
-  digitalWrite(26, LOW);
-  FastLED.addLeds<NEOPIXEL, 16>(leds, 1); 
+  Serial.begin(SERIAL_MONITOR_BAUDRATE);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(BUZZER, OUTPUT);
 }
 
 void loop() {
-  bool pressed = !digitalRead(2);
+  bool pressed = !digitalRead(BUTTON_PIN);
   if (pressed && !prevPressed) {
     Mouse.press(MOUSE_LEFT);
     Serial.println("PRESS");
-    analogWrite(28, 200);
-    leds[0] = CRGB::Blue;
+    analogWrite(BUZZER, 200);
   }
   else if (!pressed && prevPressed) {
     Mouse.release(MOUSE_LEFT);
-    leds[0] = CRGB::Black;
-    analogWrite(28, 0);
+    analogWrite(BUZZER, 0);
   }
   prevPressed = pressed;
-  FastLED.show();
   delay(50);
 }

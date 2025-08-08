@@ -1,0 +1,3 @@
+#define SERIAL_MONITOR_BAUDRATE 9600
+#define BUTTON_PIN 2
+#define BUZZER 28
