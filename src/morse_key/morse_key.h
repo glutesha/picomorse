@@ -1,7 +1,11 @@
 #pragma once
 #include <USBMouseKeyboard.h>
+#include <map>
 
 class MorseKey {
+    std::map<String, String> morseToLatin;
+    std::map<String, char> morseToRussian;
+    String last_word;
     unsigned long last_millis;
     unsigned long last_space_millis;
     unsigned long dot;
