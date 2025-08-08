@@ -1,124 +1,77 @@
 #include "morse_key.h"
-#include "Arduino.h"
+#include <Arduino.h>
 
-MorseKey::MorseKey(int button, int chmode, int lang, int caps, int buzz, unsigned long dot, int tone, int line, int space, int word_space):
-key(button),
-button_select_mode_pin(chmode),
-button_language_mode_pin(lang),
-button_capslock_pin(caps),
-buzzer_pin(buzz),
-dot(dot),
-last_millis(millis()),
-buzzer_tone(tone),
-rus(true),
-mode(2),
-line(line),
-space(space),
-word_space(word_space),
-last_space_millis(0),
-lastPressed(false),
-last_word(""),
-morseToLatin({
-        {".-",     "A"},
-        {"-...",   "B"},
-        {"-.-.",   "C"},
-        {"-..",    "D"},
-        {".",      "E"},
-        {"..-.",   "F"},
-        {"--.",    "G"},
-        {"....",   "H"},
-        {"..",     "I"},
-        {".---",   "J"},
-        {"-.-",    "K"},
-        {".-..",   "L"},
-        {"--",     "M"},
-        {"-.",     "N"},
-        {"---",    "O"},
-        {".--.",   "P"},
-        {"--.-",   "Q"},
-        {".-.",    "R"},
-        {"...",    "S"},
-        {"-",      "T"},
-        {"..-",    "U"},
-        {"...-",   "V"},
-        {".--",    "W"},
-        {"-..-",   "X"},
-        {"-.--",   "Y"},
-        {"--..",   "Z"},
-        {"-----",  "0"},
-        {".----",  "1"},
-        {"..---",  "2"},
-        {"...--",  "3"},
-        {"....-",  "4"},
-        {".....",  "5"},
-        {"-....",  "6"},
-        {"--...",  "7"},
-        {"---..",  "8"},
-        {"----.",  "9"},}),
-morseToRussian({
-        {".-",     'f'},  // А
-        {"-...",   ','},  // Б
-        {".--",    'd'},  // В
-        {"--.",    'u'},  // Г
-        {"-..",    'l'},  // Д
-        {".",      't'},  // Е
-        {"...-",   ';'},  // Ж
-        {"--..",   'p'},  // З
-        {"..",     'b'},  // И
-        {".---",   'q'},  // Й
-        {"-.-",    'r'},  // К
-        {".-..",   'k'},  // Л
-        {"--",     'v'},  // М
-        {"-.",     'y'},  // Н
-        {"---",    'j'},  // О
-        {".--.",   'g'},  // П
-        {".-.",    'h'},  // Р
-        {"...",    'c'},  // С
-        {"-",      'n'},  // Т
-        {"..-",    'e'},  // У
-        {"..-.",   'a'},  // Ф
-        {"....",   '['},  // Х
-        {"-.-.",   'w'},  // Ц
-        {"---.",   'x'},  // Ч
-        {"----",   'i'},  // Ш
-        {"--.-",   'o'},  // Щ
-        {"--.--",  ']'},  // Ъ
-        {"-.--",   's'},  // Ы
-        {"-..-",   'm'},  // Ь
-        {"..-..",  '\''}, // Э
-        {"..--",   '.'},  // Ю
-        {".-.-",   'z'},  // Я
-        {"-----",  '0'},
-        {".----",  '1'},
-        {"..---",  '2'},
-        {"...--",  '3'},
-        {"....-",  '4'},
-        {".....",  '5'},
-        {"-....",  '6'},
-        {"--...",  '7'},
-        {"---..",  '8'},
-        {"----.",  '9'},})
+MorseKey::MorseKey(int mode, bool caps, bool rus, bool boot, int button, unsigned long debounce, int chmode, int lang, int capsBtn, int buzz, unsigned long dotDur, int tone, int lineNum, int spaceDur, int wordSpaceDur)
+    : morseToLatin({
+        {".-",     "a"}, {"-...",   "b"}, {"-.-.",   "c"}, {"-..",    "d"}, {".",      "e"},
+        {"..-.",   "f"}, {"--.",    "g"}, {"....",   "h"}, {"..",     "i"}, {".---",   "j"},
+        {"-.-",    "k"}, {".-..",   "l"}, {"--",     "m"}, {"-.",     "n"}, {"---",    "o"},
+        {".--.",   "p"}, {"--.-",   "q"}, {".-.",    "r"}, {"...",    "s"}, {"-",      "t"},
+        {"..-",    "u"}, {"...-",   "v"}, {".--",    "w"}, {"-..-",   "x"}, {"-.--",   "y"},
+        {"--..",   "z"}, {"-----",  "0"}, {".----",  "1"}, {"..---",  "2"}, {"...--",  "3"},
+        {"....-",  "4"}, {".....",  "5"}, {"-....",  "6"}, {"--...",  "7"}, {"---..",  "8"}, {"----.",  "9"}
+      }),
+      morseToRussian({
+        {".-",     "f"} /*а*/, {"-...",   ","} /*б*/, {".--",    "d"} /*в*/, {"--.",    "u"} /*г*/, {"-..",    "l"} /*д*/,
+        {".",      "t"} /*е*/, {"...-",   ";"} /*ж*/, {"--..",   "p"} /*з*/, {"..",     "b"} /*и*/, {".---",   "q"} /*й*/,
+        {"-.-",    "r"} /*к*/, {".-..",   "k"} /*л*/, {"--",     "v"} /*м*/, {"-.",     "y"} /*н*/, {"---",    "j"} /*о*/,
+        {".--.",   "g"} /*п*/, {".-.",    "h"} /*р*/, {"...",    "c"} /*с*/, {"-",      "n"} /*т*/, {"..-",    "e"} /*у*/,
+        {"..-.",   "a"} /*ф*/, {"....",   "["} /*х*/, {"-.-.",   "w"} /*ц*/, {"---.",   "x"} /*ч*/, {"----",   "i"} /*ш*/,
+        {"--.-",   "o"} /*щ*/, {"--.--",  "]"} /*ъ*/, {"-.--",   "s"} /*ы*/, {"-..-",   "m"} /*ь*/, {"..-..",  "\'"} /*э*/,
+        {"..--",   "."} /*ю*/, {".-.-",   "z"} /*я*/, {"-----",  "0"}, {".----",  "1"}, {"..---",  "2"},
+        {"...--",  "3"}, {"....-",  "4"}, {".....",  "5"}, {"-....",  "6"}, {"--...",  "7"},
+        {"---..",  "8"}, {"----.",  "9"}
+      }),
+      last_word(""),
+      last_millis(millis()),
+      last_space_millis(0),
+      dot(dotDur),
+      space(spaceDur),
+      word_space(wordSpaceDur),
+      line(lineNum),
+      buzzer_tone(tone),
+      key(button),
+      button_select_mode_pin(chmode),
+      button_language_mode_pin(lang),
+      button_capslock_pin(capsBtn),
+      buzzer_pin(buzz),
+      mode(mode),
+      lastPressed(false),
+      rus(rus),
+      caps(caps),
+      bootsel_as_button(boot),
+      key_debounce(key, debounce)
 {
     pinMode(key, INPUT_PULLUP);
     pinMode(buzzer_pin, OUTPUT);
 }
 
-void MorseKey::morse(const bool pressed, USBMouseKeyboard &keyboard) {
+void MorseKey::morse(const bool pressed) {
     const unsigned long current = millis();
 
     if (!pressed) {
         if (lastPressed) {
             if (millis() - last_space_millis >= dot * word_space) {
-                keyboard.printf(" / ");
+                if(rus){
+                    Keyboard.printf(" | ");
+                }
+                else{
+                    Keyboard.printf(" / ");
+                }
             }
             else if (millis() - last_space_millis >= dot * space) {
-                keyboard.printf(" ");
+                Keyboard.printf(" ");
             }
             if (current - last_millis >= dot * line) {
-                keyboard.printf("-");
+                Keyboard.printf("-");
             }
             else if (current - last_millis >= dot) {
-                keyboard.printf(".");
+                if(rus) {
+                    Keyboard.printf("/");
+                }
+                else{
+                    Keyboard.printf(".");
+                }
             }
             last_space_millis = current;
         }
@@ -126,12 +79,12 @@ void MorseKey::morse(const bool pressed, USBMouseKeyboard &keyboard) {
     }
 }
 
-void MorseKey::decode(const bool pressed, USBMouseKeyboard &keyboard) {
+void MorseKey::decode(const bool pressed) {
     const unsigned long current = millis();
     if (!pressed) {
         if (lastPressed) {
             if (millis() - last_space_millis >= dot * word_space) {
-                keyboard.printf(" ");
+                Keyboard.printf(" ");
                 last_word = "";
             }
             if (current - last_millis >= dot * line) {
@@ -147,15 +100,21 @@ void MorseKey::decode(const bool pressed, USBMouseKeyboard &keyboard) {
                 if (millis() - last_space_millis >= dot * space) {
                     const String numbers = "0123456789";
                     if (rus) {
-                        if (numbers.indexOf(String(morseToRussian[last_word])) != -1) {
-                            keyboard.key_code(morseToRussian[last_word]);
+                        if ((numbers.indexOf(morseToRussian[last_word])) != -1 or (!caps)) {
+                            Keyboard.printf(morseToRussian[last_word].c_str());
                         }
                         else {
-                            keyboard.key_code(morseToRussian[last_word], KEY_SHIFT);
+                            Keyboard.press(KEY_LEFT_SHIFT);
+                            Keyboard.printf(morseToRussian[last_word].c_str());
+                            Keyboard.release(KEY_LEFT_SHIFT);
                         }
                     }
                     else {
-                        keyboard.printf("%s", morseToLatin[last_word].c_str());
+                        String key = morseToLatin[last_word];
+                        if(caps){
+                            key.toUpperCase();
+                        }
+                        Keyboard.printf(key.c_str());
                     }
                     last_word = "";
                 }
@@ -164,29 +123,56 @@ void MorseKey::decode(const bool pressed, USBMouseKeyboard &keyboard) {
         last_millis = current;
     }
 }
-void MorseKey::operate(USBMouseKeyboard& device) {
-    bool pressed = !digitalRead(key);
+void MorseKey::operate() {
+    bool pressed = (bootsel_as_button and BOOTSEL) or key_debounce.read();
+    
+    bool switched = false;
 
     if (pressed && !lastPressed) {
         if (mode == 0) {
-            device.press(MOUSE_LEFT);
+            Mouse.press(MOUSE_LEFT);
         }
         analogWrite(buzzer_pin, buzzer_tone);
     }
     else if (!pressed && lastPressed) {
         if (mode == 0) {
-            device.release(MOUSE_LEFT);
+            Mouse.release(MOUSE_LEFT);
         }
         analogWrite(buzzer_pin, 0);
     }
 
+    if(digitalRead(button_select_mode_pin)){
+        mode++;
+        mode = mode % 3;
+        switched = true;
+    }
+
+    if(digitalRead(button_capslock_pin)){
+        caps = !caps;
+        switched = true;
+    }
+
+    if(digitalRead(button_language_mode_pin)){
+        rus = !rus;
+        switched = true;
+    }
+
+    if(switched){
+        for(int i = 0; i < 2; i++){
+            analogWrite(buzzer_pin, buzzer_tone);
+            delay(100);
+            analogWrite(buzzer_pin, 0);
+            delay(100);
+        }
+    }
+
     switch (mode) {
         case 1: {
-            morse(pressed, device);
+            morse(pressed);
             break;
         }
         case 2: {
-            decode(pressed, device);
+            decode(pressed);
             break;
         }
     }

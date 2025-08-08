@@ -1,10 +1,12 @@
 #pragma once
-#include <USBMouseKeyboard.h>
 #include <map>
+#include <Keyboard.h>
+#include <Mouse.h>
+#include "button/button.h"
 
 class MorseKey {
     std::map<String, String> morseToLatin;
-    std::map<String, char> morseToRussian;
+    std::map<String, String> morseToRussian;
     String last_word;
     unsigned long last_millis;
     unsigned long last_space_millis;
@@ -21,12 +23,14 @@ class MorseKey {
     int mode;
     bool lastPressed;
     bool rus;
+    bool caps;
+    bool bootsel_as_button;
+    Button key_debounce;
 
-    void morse(bool, USBMouseKeyboard&);
-    void decode(bool, USBMouseKeyboard&);
-    void changeMode(int);
+    void morse(bool pressed);
+    void decode(bool pressed);
 
     public:
-        MorseKey(int, int, int, int, int, unsigned long, int, int, int, int);
-        void operate(USBMouseKeyboard&);
+        MorseKey(int mode, bool caps, bool rus, bool boot, int button, unsigned long debounce, int chmode, int lang, int capsBtn, int buzz, unsigned long dotDur, int tone, int lineNum, int spaceDur, int wordSpaceDur);
+        void operate();
 };

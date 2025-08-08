@@ -1,19 +1,20 @@
 #include <Arduino.h>
-#include <USBMouseKeyboard.h>
+#include <Keyboard.h>
+#include <Mouse.h>
 
 #include "defines.h"
 #include "morse_key/morse_key.h"
 
 MorseKey *morse = nullptr;
-USBMouseKeyboard device;
-
 bool prevPressed = false;
 
 void setup() {
   Serial.begin(SERIAL_MONITOR_BAUDRATE);
-  morse = new MorseKey(BUTTON_PIN, BUTTON_MODE_PIN, BUTTON_LANGUAGE_PIN, BUTTON_CAPS_PIN, BUZZER, DOT, BUZZER_TONE, LINE, SPACE, WORD);
+  Keyboard.begin();
+  Mouse.begin();
+  morse = new MorseKey(DEFAULT_MODE, DEFAULT_CAPS, DEFAULT_RUS, BOOTSEL_AS_BUTTON, BUTTON_PIN, DEBOUNCE, BUTTON_MODE_PIN, BUTTON_LANGUAGE_PIN, BUTTON_CAPS_PIN, BUZZER_PIN, DOT, BUZZER_TONE, LINE, SPACE, WORD);
 }
 
 void loop() {
-  morse->operate(device);
+  morse->operate();
 }

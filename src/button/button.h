@@ -8,6 +8,6 @@ class Button{
     unsigned long debounce;
     unsigned long lastDebounce;
 public:
-    Button(int pin);
+    Button(int pin, unsigned long debounce);
     bool read();
 };
