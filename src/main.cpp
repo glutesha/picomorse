@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include <PluggableUSBHID.h>
 #include <USBMouse.h>
+#include <USBKeyboard.h>
 
 #include "defines.h"
 
 USBMouse Mouse;
+USBKeyboard Keyboard;
 
 bool prevPressed = false;
 

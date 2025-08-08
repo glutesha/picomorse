@@ -1,9 +1,11 @@
 # Picomorse
 Picomorse is a RP2040 based morse code keyboard. You can make it basically out of any existing morse key or a simple tactile button.
 
+## Configuration
+You can remap basically everything in ```defines.h``` file. As simple as that.
 ## Operating modes
 ### Mouse clicks
-Key press = mouse click. Simple as that.
+Key press = mouse click.
 ### Dots and lines
 Basically types out morse code itself.
 ### Decoder
