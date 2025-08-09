@@ -1,4 +1,4 @@
-# Picomorse
+# Picomorse ![stats](https://hackatime-badge.hackclub.com/U091LS2TL8M/picomorse)
 Picomorse is an RP2040-based Morse code keyboard. You can make it out of any existing Morse key or a simple tactile button.
 Supports English and Russian Morse.
 ## Build
