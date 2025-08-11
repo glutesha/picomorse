@@ -51,17 +51,6 @@ void MorseKey::morse(const bool pressed) {
 
     if (!pressed) {
         if (lastPressed) {
-            if (millis() - last_space_millis >= dot * word_space) {
-                if(rus){
-                    Keyboard.printf(" | ");
-                }
-                else{
-                    Keyboard.printf(" / ");
-                }
-            }
-            else if (millis() - last_space_millis >= dot * space) {
-                Keyboard.printf(" ");
-            }
             if (current - last_millis >= dot * line) {
                 Keyboard.printf("-");
             }
@@ -73,9 +62,24 @@ void MorseKey::morse(const bool pressed) {
                     Keyboard.printf(".");
                 }
             }
-            last_space_millis = current;
         }
         last_millis = current;
+    }
+    else{
+        if(!lastPressed) {
+            if (millis() - last_space_millis >= dot * word_space) {
+                if(rus){
+                    Keyboard.printf(" | ");
+                }
+                else{
+                    Keyboard.printf(" / ");
+                }
+            }
+            else if (millis() - last_space_millis >= dot * space) {
+                Keyboard.printf(" ");
+            }
+            last_space_millis = current;
+        }
     }
 }
 
