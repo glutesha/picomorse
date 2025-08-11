@@ -87,17 +87,12 @@ void MorseKey::decode(const bool pressed) {
     const unsigned long current = millis();
     if (!pressed) {
         if (lastPressed) {
-            if (millis() - last_space_millis >= dot * word_space) {
-                Keyboard.printf(" ");
-                last_word = "";
-            }
             if (current - last_millis >= dot * line) {
                 last_word += "-";
             }
             else if (current - last_millis >= dot) {
                 last_word += ".";
             }
-            last_space_millis = current;
         }
         else {
             if (last_word != "") {
@@ -125,6 +120,14 @@ void MorseKey::decode(const bool pressed) {
             }
         }
         last_millis = current;
+    }
+    else{
+        if(!lastPressed) {
+            if (millis() - last_space_millis >= dot * word_space) {
+                Keyboard.printf(" ");
+            }
+            last_space_millis = current;
+        }
     }
 }
 void MorseKey::operate() {
