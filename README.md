@@ -9,7 +9,7 @@ To build this project in its full configuration, you need:
 - Old telegraph key
 
 I've built mine using all the parts listed below, but you can run this project simply by clicking the BOOT button on the board itself. How cool is that?
-To upload the firmware, you need PlatformIO CLI or plugin installed. Use the regular PlatformIO upload button or type in ```pio run --target upload``` in your terminal.
+To upload the firmware, you need PlatformIO CLI or a plugin installed. Use the regular PlatformIO upload button or type in ```pio run --target upload``` in your terminal.
 ## Configuration
 You can remap everything in ```defines.h``` file.
 ## Usage
